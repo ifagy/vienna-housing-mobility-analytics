@@ -55,6 +55,8 @@ export default class ButterflyVis {
             .attr('text-anchor', 'middle')
             .attr('font-size', '10px')
             .attr('font-family', 'Space Grotesk, sans-serif')
+            .attr('fill','#5b9cf6')
+            .attr('font-weight', '600')
             .text('← Working here (in)');
 
         vis.headerRight = vis.svg.append('text')
@@ -63,6 +65,8 @@ export default class ButterflyVis {
             .attr('text-anchor', 'middle')
             .attr('font-size', '10px')
             .attr('font-family', 'Space Grotesk, sans-serif')
+            .attr('fill', '#f5705b')
+            .attr('font-weight', '600')
             .text('Living here, working out →');
 
         // Axis groups
@@ -115,14 +119,7 @@ export default class ButterflyVis {
 
         const t = vis.chart.transition().duration(1000);
 
-        // Update header styling based on active sort mode
-        vis.headerLeft
-            .attr('fill', inActive ? '#8fc0ff' : '#5b9cf6')
-            .attr('font-weight', inActive ? '700' : '600');
-            
-        vis.headerRight
-            .attr('fill', outActive ? '#ffa494' : '#f5705b')
-            .attr('font-weight', outActive ? '700' : '600');
+        
 
         // Tooltip formatting function
         const tooltipHtml = (d) => `
@@ -141,7 +138,7 @@ export default class ButterflyVis {
                     .attr('data-district', d => d.id)
                     .attr('fill', '#5b9cf6')
                     .attr('rx', 1)
-                    .attr('x', vis.midX) // Start animation from center
+                    .attr('x', vis.midX) 
                     .attr('y', d => vis.yScale(d.id))
                     .attr('width', 0)
                     .attr('height', vis.yScale.bandwidth())
@@ -161,7 +158,7 @@ export default class ButterflyVis {
                     ),
                 update => update
                     .call(update => update.transition(t)
-                        .attr('y', d => vis.yScale(d.id)) // Smoothly slide to new vertical position
+                        .attr('y', d => vis.yScale(d.id)) 
                         .attr('x', d => vis.xL(d.inC))
                         .attr('width', d => vis.midX - vis.xL(d.inC))
                         .attr('height', vis.yScale.bandwidth())
@@ -222,7 +219,7 @@ export default class ButterflyVis {
                 enter => enter.append('text')
                     .attr('class', 'y-label')
                     .attr('x', vis.midX)
-                    .attr('y', d => vis.yScale(d.id) + vis.yScale.bandwidth() / 2 + 3)
+                    .attr('y', d => vis.yScale(d.id) + vis.yScale.bandwidth() /2 + 3)
                     .attr('text-anchor', 'middle')
                     .attr('fill', '#ffffff')
                     .attr('font-size', '8px')
