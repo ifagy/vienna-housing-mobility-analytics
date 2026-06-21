@@ -39,7 +39,7 @@ function initApp() {
 
     // Bind UI inputs and triggers
     initEventListeners();
-    initScrollama();
+    initScrollama(); //for scorytelling
     initInterstitialReveal();
 }
 
@@ -66,7 +66,7 @@ function initDispatcher() {
     dispatcher.on('linkDistrict', (id) => {
         // 1. Scrolly map path highlights
         d3.selectAll('.scrolly-map')
-            .attr('opacity', f => f.properties && f.properties.BEZNR !== id ? 0.4 : 1)
+            .attr('opacity', f => f.properties && f.properties.BEZNR !== id ? 0.4 : 1) //hovered one highlighted
             .attr('stroke', f => f.properties && f.properties.BEZNR === id ? 'white' : null)
             .attr('stroke-width', f => f.properties && f.properties.BEZNR === id ? 2 : null);
 
@@ -157,7 +157,7 @@ function initScrollama() {
         d3.select(this).attr('data-index', i);
     });
 
-    scroller.setup({ step: '.step', offset: 0.5 })
+    scroller.setup({ step: '.step', offset: 0.5 }) //after the half
         .onStepEnter(({ element, index }) => {
             // Manage active state classes across narrative step text containers
             document.querySelectorAll('.step').forEach(s => s.classList.remove('is-active'));
@@ -190,7 +190,7 @@ function initScrollama() {
                 const mapTitle = document.querySelector('#panel-map .viz-title');
                 if (mapTitle) {
                     mapTitle.textContent = isGlobal 
-                        ? "Average rent per m² by district (€) — 2025" 
+                        ? "Average rent per m² by district (€) — 2025" //title based on global or not
                         : "Relative rent affordability by district — Yearly Trend";
                 }
             }
@@ -249,7 +249,7 @@ function highlightRisers(active) {
     // Targeting Brigittenau (20) and Neubau (7) based on data analysis
     const risers = new Set([20, 7]); 
     
-    if (active) {
+    if (active) { //chapter 2 -> active = true
         mapVis.mapG.selectAll('.scrolly-map')
             .attr('opacity', f => risers.has(f.properties.BEZNR) ? 1 : 0.25)
             .attr('stroke', f => risers.has(f.properties.BEZNR) ? '#4ecb8d' : null)
@@ -271,7 +271,7 @@ function highlightBedroomDistricts(active) {
     if (active) {
         d3.selectAll('[data-district]')
             .style('opacity', function() {
-                const id = +this.dataset.district;
+                const id = +this.dataset.district; //transform to integer
                 return bedrooms.has(id) ? 1 : 0.25;
             });
     } else {
@@ -293,7 +293,7 @@ function initInterstitialReveal() {
                 observer.disconnect();
             }
         });
-    }, { threshold: 0.4 });
+    }, { threshold: 0.4 }); //threshold
     
     observer.observe(revealElement);
 }
