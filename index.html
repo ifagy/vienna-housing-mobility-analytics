@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vienna — The True Cost of Your District</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ── TOOLTIP ──────────────────────────────────────────────── -->
+<div id="tooltip"></div>
+
+<!-- ── HERO ─────────────────────────────────────────────────── -->
+<section id="hero">
+  <video autoplay loop muted playsinline class="hero-video">
+    <source src="videomCut.mp4" type="video/mp4"> 
+    Your browser does not support the video tag.
+  </video>
+  
+
+  <div class="hero-content">
+    <span class="hero-eyebrow">Vienna Housing &amp; Mobility</span>
+    <h1 class="hero-title">The <em>true cost</em> of your district</h1>
+    <p class="hero-subtitle">
+      Rent is only half the story. Before you sign a lease, find out how 
+      much each district really costs you in commuting time, distance, and energy.
+    </p>
+    <button class="hero-cta" onclick="document.getElementById('scrolly').scrollIntoView({behavior:'smooth'})">
+      Explore the data ↓
+    </button>
+  </div>
+  
+  <div class="hero-scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+  
+
+  
+</section>
+
+<!-- ── SCROLLYTELLING ────────────────────────────────────────── -->
+<div id="scrolly">
+
+  <!-- Sticky visualization panel -->
+  <div id="sticky-viz">
+    <div id="viz-container">
+
+      <!-- Panel 0 + 1: Choropleth map -->
+      <div id="panel-map" class="viz-panel active">
+        <div class="viz-title">Average rent per m² by district (€)</div>
+        <div id="viz-map" style="width:100%;flex:1 1 auto;min-height:0;position:relative;"></div>
+        <div id="year-slider-wrap" class="year-slider-wrap" style="display:none;">
+          <span style="font-size:0.8rem;color:#7a7a8c;">2012</span>
+          <input type="range" id="map-year-slider" min="2012" max="2025" step="1" value="2025" />
+          <span style="font-size:0.8rem;color:#7a7a8c;">2025</span>
+          <span class="year-label" id="map-year-label">2025</span>
+        </div>
+        <div class="legend" style="margin-top:0.5rem;">
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:linear-gradient(to right,#f5d76e,#8b1a1a);width:60px;"></span>
+          </span>
+          <span style="color:#7a7a8c;font-size:0.75rem;">Affordable → Expensive</span>
+          <span class="legend-item" style="margin-left:0.8rem;">
+            <span class="legend-swatch" style="background:#a855f7;"></span>
+            <span style="color:#7a7a8c;font-size:0.75rem;">District 1 (outlier)</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Panel 2 + 3: Butterfly chart -->
+      <div id="panel-butterfly" class="viz-panel">
+        <div class="viz-controls">
+          <span style="font-size:0.78rem;color:#7a7a8c;align-self:center;">Sort by:</span>
+          <button class="btn-toggle butterfly-btn active" data-sort="balance">Net balance</button>
+          <button class="btn-toggle butterfly-btn" data-sort="in">Most in</button>
+          <button class="btn-toggle butterfly-btn" data-sort="out">Most out</button>
+        </div>
+        <div id="viz-butterfly" style="width:100%;flex:1 1 auto;min-height:0;"></div>
+        <div class="legend" id="butterfly-legend">
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#5b9cf6;"></span>
+            <span>Working here (in-commuters)</span>
+          </span>
+          <span class="legend-item" style="margin-left:0.8rem;">
+            <span class="legend-swatch" style="background:#f5705b;"></span>
+            <span>Living here, working elsewhere</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Panel 4: Scatter plot -->
+      <div id="panel-scatter" class="viz-panel">
+        <div class="viz-title">Rent vs. commuter inflow by district</div>
+        <div id="viz-scatter" style="width:100%;flex:1 1 auto;min-height:0;"></div>
+        <div class="legend">
+          <span class="legend-item">
+            <span class="legend-swatch" style="background:#5b9cf6;border-radius:50%;"></span>
+            <span>Districts 2–23</span>
+          </span>
+          <span class="legend-item" style="margin-left:0.8rem;">
+            <span class="legend-swatch" style="background:#a855f7;border-radius:50%;"></span>
+            <span>District 1 (outlier)</span>
+          </span>
+          <span class="legend-item" style="margin-left:0.8rem;">
+            <span class="legend-swatch" style="background:#f5a623;height:2px;width:20px;margin-top:5px;"></span>
+            <span>Trend line</span>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Narrative steps -->
+  <div id="steps">
+
+    <!-- Step 0: Map intro -->
+    <div class="step is-active" data-step="0">
+      <div class="step-num">Step 01 — Price Map</div>
+      <h2>Vienna's rent landscape in 2025</h2>
+      <p>
+        Not all districts are created equal. The map shows the 
+        <strong>current average monthly rent per m²</strong> across all 23 districts, 
+        providing a snapshot of the city based on the latest 2025 data.
+      </p>
+      <p>
+        Hover over any district to see its exact price. The color scale runs from 
+        pale yellow (lower) to deep red (higher).
+      </p>
+      <div class="callout">
+        <span class="big">★ District 1</span>
+        Innere Stadt stands alone as a clear outlier — at <strong>€26.11/m²</strong>.
+        Shown in purple to distinguish it from the 
+        rest of the scale.
+      </div>
+    </div>
+
+    <!-- Step 1: Map time slider -->
+    <div class="step" data-step="1">
+      <div class="step-num">Step 02 — Price Trends</div>
+      <h2>Rents have risen everywhere — but not equally</h2>
+      <p>
+        Use the <strong>year slider</strong> to scrub through time from 2012 to 2025. 
+        Watch the map adjust as prices climb across the city
+      </p>
+      <p>
+        Central districts started expensive and stayed expensive. 
+        But if you look closely, certain outer districts have seen the sharpest relative increases 
+        — places that were once the default "affordable" options are now catching up fast.
+      </p>
+      <div class="callout">
+        <span class="big">+42%</span>
+        Average rent increase across Vienna from 2012–2025. 
+        But some districts grew by over 80%.
+      </div>
+    </div>
+
+    <!-- Step 2 (NEW): Highlight Favoriten & Floridsdorf -->
+    <div class="step" data-step="2">
+      <div class="step-num">Step 03 — The Fastest Risers</div>
+      <h2>Two districts stand out</h2>
+      <p>
+        Look at the two highlighted districts on the map. A decade ago, both 
+        <strong>Brigittenau (20)</strong> and <strong>Neubau (7)</strong> were 
+        significantly more affordable choices.
+      </p>
+      <p>
+        Today they're rapidly catching up to the inner districts. What used to be 
+        the obvious "affordable choice" is becoming a lot less affordable.
+      </p>
+      <div class="callout">
+        <span class="big">+87% &nbsp; +80%</span>
+        <strong>Brigittenau</strong> rose 87% and <strong>Neubau</strong> 80% 
+        between 2012 and 2025 — far above the city average.
+      </div>
+    </div>
+
+    <!-- Step 3: Butterfly intro -->
+    <div class="step" data-step="3">
+      <div class="step-num">Step 04 — Commuter Flows</div>
+      <h2>Every district plays a different role</h2>
+      <p>
+        This butterfly chart compares two distinct flows side by side: 
+        <strong style="color:#5b9cf6;">how many people commute in to work</strong> 
+        (left), and 
+        <strong style="color:#f5705b;">how many residents commute out to work</strong> 
+        (right).
+      </p>
+      <p>
+        Districts dominated by left bars are <em>employment hubs</em>. 
+        Districts dominated by right bars are <em>bedroom communities</em> — 
+        people live there, but work somewhere else.
+      </p>
+      <p>
+        By default, the chart is sorted by <strong>"Net balance"</strong> (incoming workers minus outgoing residents), 
+        sorting them from the biggest job providers to the biggest residential suburbs, regardless of their total population
+      </p>
+      <p>
+        Hover over any bar to see the exact numbers. Use the 
+        <strong>"Most in"</strong> and <strong>"Most out"</strong> buttons to 
+        re-order the districts by either flow.
+      </p>
+    </div>
+
+    <!-- Step 4: Butterfly insight -->
+    <div class="step" data-step="4">
+      <div class="step-num">Step 05 — Hidden Cost</div>
+      <h2>Living in a "bedroom district" has a price</h2>
+      <p>
+        Districts like <strong>Donaustadt (22)</strong>, <strong>Favoriten (10)</strong> 
+        and <strong>Floridsdorf (21)</strong> are popular for their lower rents. 
+        But look at their right bars — massive out-commuting flows.
+      </p>
+      <p>
+        Hundreds of thousands of people travel daily from these outer districts 
+        into the city centre. The money you save on rent may cost you 
+        <strong>hours of commute time every week</strong>.
+      </p>
+      <div class="callout">
+        <span class="big">121,000</span>
+        People commute into District 1 every day — 
+        but only 3,888 people actually live there.
+      </div>
+    </div>
+
+    <!-- Step 5: Scatter -->
+    <div class="step" data-step="5">
+      <div class="step-num">Step 06 — The Connection</div>
+      <h2>Higher rents attract more commuters — but there are outliers</h2>
+      <p>
+        Each dot is a district. The X-axis shows its average rent; 
+        the Y-axis shows how many people commute in daily. 
+        The <strong style="color:#f5a623;">dashed trend line</strong> reveals 
+        a clear pattern: pricier districts attract more workers.
+      </p>
+      <p>
+        But notice the <strong style="color:#a855f7;">purple outlier</strong> 
+        (District 1) far above the trend — it attracts an extraordinary number 
+        of commuters relative even to its high price. And districts like 
+        <strong>Donaustadt (22)</strong> sit low-right: affordable but with 
+        heavy outbound commuting.
+      </p>
+      
+    </div>
+
+  </div><!-- /steps -->
+</div><!-- /scrolly -->
+
+<!-- ── INTERSTITIAL: OTHER FACTORS (full page) ───────────────── -->
+<section id="other-factors">
+  <div class="of-inner">
+    <p class="of-eyebrow">A word of caution</p>
+    <h2 class="of-title">Rent and location are only <em>two</em> pieces of the puzzle.</h2>
+    <p class="of-lead">
+      Everything so far compares districts on price and commuting. But a place to 
+      live is more than a number on a map — schools, green space, nightlife, safety, 
+      noise, and the simple feeling of belonging all matter too.
+    </p>
+    <div class="of-reveal">
+      <p>
+        Take <strong>Favoriten</strong>. On paper it looks like a long commute and 
+        rising rent. In reality it's one of Vienna's most diverse, lively districts — 
+        with sprawling markets, the Böhmischer Prater, and a strong sense of community 
+        that no dataset captures.
+      </p>
+      <p class="of-small">
+        Use the tool below as a starting point, not the final word.
+      </p>
+    </div>
+    <div class="of-scroll-hint">↓</div>
+  </div>
+</section>
+
+<!-- ── INTERACTIVE EXPLORER ───────────────────────────────── -->
+<section id="explorer-section">
+  <h2>Find your district</h2>
+  <p class="sub">Set your constraints — the map highlights districts that match.</p>
+
+  <div class="explorer-layout">
+    <div class="explorer-controls">
+
+      <div class="control-group">
+        <label>Max rent budget (€/m²)</label>
+        <input type="range" id="price-range" min="15" max="28" step="0.5" value="23" />
+        <span class="range-val" id="price-range-val">€23/m²</span>
+      </div>
+
+      <div class="control-group">
+        <label>Job opportunities <br>(people commuting in)</label>
+        <input type="range" id="jobs-range" min="0" max="80000" step="5000" value="0" />
+        <span class="range-val" id="jobs-range-val">Any</span>
+      </div>
+
+      <div class="match-summary">
+        <span id="match-count">—</span>
+        districts match your criteria
+        <div class="match-list" id="match-list"></div>
+      </div>
+
+      <div style="font-size:0.78rem;color:#7a7a8c;line-height:1.6;">
+        <strong style="color:#4ecb8d;">Green districts</strong> fit your budget and 
+        have at least the chosen number of job opportunities nearby. 
+        Hover any district for details.
+      </div>
+    </div>
+
+    <div id="explorer-map"></div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────── -->
+<footer>
+  <span>
+    Data: <a href="https://www.data.gv.at" style="color:var(--accent);text-decoration:none;" target="_blank">data.gv.at</a> — 
+    Pendlerströme Wien (2009–2023) &amp; Immobilienpreise Wien (2012–2025)
+  </span>
+  <span>Built with D3.js v7 &amp; Scrollama · TU Wien InfoVis 2026</span>
+</footer>
+
+<!-- ── LIBRARIES ──────────────────────────────────────────────── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://unpkg.com/scrollama@3.2.0/build/scrollama.min.js"></script>
+<script src="data/embedded_data.js"></script>
+<script src="data/embedded_data.js"></script> <script type="module" src="js/main.js"></script> ```
+
+</body>
+</html>
