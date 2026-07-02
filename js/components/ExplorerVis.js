@@ -122,7 +122,7 @@ export default class ExplorerVis {
             let reachableCount = 0;
             const row = TRAVEL_MATRIX[d.id];
             if (row) {
-                // Tooltip'teki sayı artık 3 filtrenin kesişimini sayıyor!
+                
                 Object.entries(row).forEach(([targetId, time]) => {
                     if (time <= vis.maxTravelTime && vis.matchedIds.has(Number(targetId))) {
                         reachableCount++;
@@ -158,22 +158,21 @@ export default class ExplorerVis {
                     const targetId = targetFeature.properties.BEZNR;
                     const travelTime = TRAVEL_MATRIX[vis.hoveredDistrictId][targetId];
                     
-                    let targetColor = '#2a2b35'; // Varsayılan: Süre yetmiyor (Koyu)
-                    let targetOpacity = 0.3;     // Varsayılan: Süre yetmiyor (Saydam)
+                    let targetColor = '#2a2b35'; 
+                    let targetOpacity = 0.3;     
 
                     if (targetId === vis.hoveredDistrictId) {
-                        // Kendi ilçesi
+                        
                         targetColor = '#5b9cf6'; 
                         targetOpacity = 1;
                     } else if (travelTime <= vis.maxTravelTime) {
-                        // Süre YETİYOR, opacity tam. Ama yeşil mi olacak?
+                        
                         targetOpacity = 1;
 
                         if (vis.matchedIds.has(targetId)) {
-                            // Hem süre yetiyor HEM DE bütçe/iş filtresinden geçti (YEŞİL)
-                            targetColor = '#4ecb8d'; 
                             
-                            // Çemberi sadece uyan ilçeleri kapsayacak şekilde büyüt
+                            targetColor = '#4ecb8d'; 
+                          
                             const targetCentroid = vis.centroids.get(targetId);
                             const dx = targetCentroid[0] - originCentroid[0];
                             const dy = targetCentroid[1] - originCentroid[1];
@@ -200,7 +199,7 @@ export default class ExplorerVis {
                     .attr('r', maxRadius > 0 ? maxRadius + 15 : 15)
                     .style('opacity', 1);
 
-                // --- 3. İSTEK: YAN PANELİ DİNAMİK OLARAK GÜNCELLE ---
+                
                 vis.updateUI(vis.hoveredDistrictId);
 
                 vis.dispatcher.call('showTooltip', event, event, tooltipHtml(d));
@@ -211,7 +210,6 @@ export default class ExplorerVis {
                 vis.hoveredDistrictId = null;
                 vis.isochroneCircle.style('opacity', 0);
                 
-                // Mouse çekilince haritayı eski haline getir
                 vis.paths
                     .attr('fill', f => {
                         const d = vis.distMap.get(f.properties.BEZNR);
@@ -221,7 +219,7 @@ export default class ExplorerVis {
                     .attr('stroke', '#0e0f13')
                     .attr('stroke-width', 1);
 
-                // --- 3. İSTEK: YAN PANELİ ESKİ (GLOBAL) HALİNE GETİR ---
+              
                 vis.updateUI();
 
                 vis.dispatcher.call('hideTooltip');
@@ -229,27 +227,27 @@ export default class ExplorerVis {
             });
     }
 
-    // YENİ updateUI FONKSİYONU (hoveredId parametresi eklendi)
+  
     updateUI(hoveredId = null) {
         let vis = this;
         
-        // Slider etiketlerini güncelle
+        
         d3.select(vis.config.priceValElement).text(`€${vis.maxPrice}/m²`);
         d3.select(vis.config.jobsValElement).text(
             vis.minJobs === 0 ? 'Any' : `${(vis.minJobs / 1000)}k+ people`
         );
 
-        // Dinamik filtreleme: Eğer hover yapıldıysa, sadece süreye uyan match'leri göster
+        
         let displayDistricts = vis.matchedDistricts;
         
         if (hoveredId !== null) {
             displayDistricts = vis.matchedDistricts.filter(d => {
-                // Seçilen ilçeden hedef ilçeye olan süre <= seçilen süre mi?
+               
                 return TRAVEL_MATRIX[hoveredId][d.id] <= vis.maxTravelTime;
             });
         }
 
-        // Metinleri Güncelle
+       
         d3.select(vis.config.matchCountElement).text(displayDistricts.length);
         
         const listText = displayDistricts.length > 0
