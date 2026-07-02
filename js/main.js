@@ -134,6 +134,16 @@ function initEventListeners() {
     // Range slider inputs updating ExplorerVis constraints dynamically
     const priceRange = document.getElementById('price-range');
     const jobsRange = document.getElementById('jobs-range');
+    const timeRange = document.getElementById('time-range');
+    const timeRangeVal = document.getElementById('time-range-val');
+
+    if (timeRange) {
+        timeRange.addEventListener('input', function() {
+            const timeVal = +this.value;
+            timeRangeVal.textContent = `${timeVal} mins`;
+            explorerVis.updateTravelTime(timeVal);
+        });
+    }
     
     if (priceRange && jobsRange) {
         const triggerExplorerUpdate = () => {
