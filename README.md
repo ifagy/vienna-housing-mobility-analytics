@@ -1,6 +1,6 @@
 # Vienna: The True Cost of Your District
 
-A data visualization project exploring the relationship between rent prices and commuting patterns across Vienna's 23 districts. This project aims to show flat seekers that the cheapest apartment is not always the best deal when factoring in commuting time and costs.
+An interactive scrollytelling/data visualization project exploring the relationship between rent prices and commuting patterns across Vienna's 23 districts. This project aims to show flat seekers that the cheapest apartment is not always the best deal when factoring in commuting time and costs.
 
 ## Overview
 This project uses a scrollytelling format to guide users through the data step by step, from a broad city overview to a personal conclusion. It highlights the hidden trade-offs of housing decisions by combining real estate prices with official commuter flows.
